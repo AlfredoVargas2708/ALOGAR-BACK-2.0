@@ -17,7 +17,7 @@ class UsersController {
         }
     }
 
-    getAllUserByUsername(req, res) {
+    getUserByUsername(req, res) {
         try {
             const { username } = req.params;
             if (!username) {
