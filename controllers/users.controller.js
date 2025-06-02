@@ -17,6 +17,31 @@ class UsersController {
         }
     }
 
+    getAllUserByUsername(req, res) {
+        try {
+            const { username } = req.params;
+            if (!username) {
+                return res.status(400).json({ message: 'Username is required' });
+            }
+            const query = 'SELECT * FROM users WHERE username = $1';
+            const values = [username];
+
+            pool.query(query, values, (error, results) => {
+                if (error) {
+                    console.error('Error executing query:', error);
+                    return res.status(500).json({ message: 'Internal Server Error' });
+                }
+                if (results.rows.length === 0) {
+                    return res.status(404).json({ message: 'User not found' });
+                }
+                res.status(200).json(results.rows[0]);
+            });
+        } catch (error) {
+            console.error('Error fetching user by username:', error);
+            res.status(500).json({ message: 'Internal Server Error' });
+        }
+    }
+
     login(req, res) {
         try {
             const { user } = req.body;
